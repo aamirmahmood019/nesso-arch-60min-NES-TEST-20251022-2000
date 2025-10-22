@@ -1,0 +1,228 @@
+openapi: 3.0.3
+
+    info:
+        title: Tickets API-NES-TEST-20251022-2000
+        version: 3.0.0
+        
+    servers:
+        - url: http://localhost:4010
+        
+        components:
+            securitySchemes:
+            bearerAuth:
+                type: http
+                scheme: bearer 
+                bearerFormate: JWT
+                
+            Schema:
+                Error:
+                type: object
+                properties:
+                    traceId:
+                    type: string
+                    message:
+                    type: string
+                
+                
+        security:
+            bearerAuth: []
+            
+            
+        Paths:
+            /tickets:
+            POST:
+                summary: Create the tickets
+                operationalId: createTicket
+                parameters:
+                    - name: Idempotency-key
+                        in: header
+                        required: true
+                        schema:
+                            type: string
+                            requestedBody:
+                                required: true
+                                content:
+                                    application/json:
+                                    example:
+                                        subject: "Login issue"
+                                        description: "access denied"
+                            responses:
+                                '201':
+                                    description: "Ticket Created"
+                                '401':
+                                    description: "Unauthorized"
+                                        content:
+                                            application/json:
+                                            $ref: #/components/Schema/Error
+                                        
+                GET:
+                    summary: List of tickets #Pagination
+                    operationalId: listTickets
+                    parameters:
+                        - name: page
+                            in: query
+                            schema:
+                                type: Integer
+                                default: 1
+                        - name: pageSize
+                            in: query
+                            schema:
+                                type: Integer
+                                default: 10
+                        responses:
+                            '200':
+                                description: "List the tickets"
+                                    content:
+                                        application/json:
+                                            schema:
+                                                type: array
+                                                properties:
+                                                    Id:
+                                                        type: string
+                                                    subject: 
+                                                        type: string
+                                                    description:
+                                                        type: string
+                                                
+                            '401':
+                                    description: "Unauthorized"
+                                        content:
+                                            application/json:
+                                            $ref: #/components/Schema/Error
+                            '404':
+                                description: "not found"
+                                    content:
+                                        application/json:
+                                        $ref: #/components/schema/Error
+                                        
+                    /tickets/{id}:
+                        GET:
+                            summary: get ticket by id
+                            operationalId: getTicket
+                            parameters:
+                                - name: id
+                                    in: path
+                                    required: true
+                                        schema:
+                                            type: string
+                            responses:
+                                '200':
+                                    description: "List the tickets"
+                                        content:
+                                            application/json:
+                                                schema:
+                                                    type: object
+                                                    properties:
+                                                        Id:
+                                                            type: string
+                                                        subject: 
+                                                            type: string
+                                                        description:
+                                                            type: string
+                                '401':
+                                    description: "Unauthorized"
+                                        content:
+                                            application/json:
+                                            $ref: #/components/Schema/Error
+                                '404':
+                                    description: "not found"
+                                        content:
+                                            application/json:
+                                            $ref: #/components/schema/Error
+                        
+                        PATCH:
+                            summary: Update ticket
+                            operationalId: updateTicket
+                            parameters:
+                                - name: id
+                                    in: path
+                                    required: true
+                                    schema:
+                                        type: string
+                                    requestedBody:
+                                        content:
+                                            application/json:
+                                                example:
+                                                    subject: "Not authenticated"
+                                                    description: "access denied"                                                    
+                                    responses:
+                                        '201':
+                                            description: "Ticket Updated"
+                                        '401':
+                                            description: "Unauthorized"
+                                                content:
+                                                    application/json:
+                                                    $ref: #/components/Schema/Error
+                                                    
+                    /tickets/{id}/attachments:
+                        POST:
+                            summary: add attachments
+                            operationalId: updateAttachments
+                            parameters:
+                                - name: id
+                                    in: path
+                                    required: true
+                                        schema:
+                                            type: string
+                                requestedBody:
+                                    required: true
+                                        content:
+                                            multipart/form-data:
+                                                example:
+                                                    file: "image.png"
+                                    responses:
+                                            '201':
+                                                description: "Updated Attachment"
+                                                    content:
+                                                        application/json:
+                                            '401':
+                                                description: "Unauthorized"
+                                                    content:
+                                                        application/json:
+                                                        $ref: #/components/Schema/Error
+                        /tickets/{id}/messages:
+                            GET:
+                                summary: get message by ticketId
+                                operationalId: getMessagebyId
+                                parameters:
+                                    - name: id
+                                        in: path
+                                        required: true
+                                            schema:
+                                                type: string
+                                responses:
+                                    '200':
+                                        description: "Message details"
+                                            content:
+                                                application/json:
+                                                    schema:
+                                                        type: object
+                                                        properties:
+                                                            Id:
+                                                                type: string
+                                                            context: 
+                                                                type: string
+                                    '401':
+                                        description: "Unauthorized"
+                                            content:
+                                                application/json:
+                                                $ref: #/components/Schema/Error
+                                    '404':
+                                        description: "not found"
+                                            content:
+                                                application/json:
+                                                $ref: #/components/schema/Error
+                                    
+                                                
+                                        
+                                                    
+                                            
+                                        
+                                
+                                
+            
+                                
+                                
+                       
+                
+
