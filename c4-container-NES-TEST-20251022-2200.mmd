@@ -1,0 +1,8 @@
+graph TD
+
+Customer --> FrontEnd
+FrontEnd --> APIGateway
+APIGateway --> OIDCAuthentication
+APIGateway --> TicketsAPI
+TicketsAPI --> DocumentsVault
+TicketsAPI --> 	Notification
