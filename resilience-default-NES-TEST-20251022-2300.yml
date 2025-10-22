@@ -1,0 +1,16 @@
+timeouts:
+http: 3s
+    retries:
+    maxAttempt: 3 #Number of attemps
+        backoff:
+            initialDelay: 500ms #retries atfer this delay
+            multiplier: 2 #exponential backoff
+            maxDelay: 1500ms #retries atfer maximum delay
+            
+        circuitBreaker:
+            failureRateThreshold: 50% #trip if half of the calls fails
+            slidingWindowSize: 20 #See the last 20 calls
+            minimumNumberOfCalls: 10 #atleaset 10 calls to avoid premature failureRateThreshold
+            waitDurationInOpenState: 30s #maximum waiting time before close.
+    
+    
